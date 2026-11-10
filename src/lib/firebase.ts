@@ -10,9 +10,9 @@ const app = initializeApp(
   useEmulators
     ? {
         apiKey: "demo-api-key",
-        authDomain: "demo-ostergardshus.firebaseapp.com",
-        projectId: "demo-ostergardshus",
-        storageBucket: "demo-ostergardshus.appspot.com",
+        authDomain: "demo-samfalligheten.firebaseapp.com",
+        projectId: "demo-samfalligheten",
+        storageBucket: "demo-samfalligheten.appspot.com",
       }
     : {
         apiKey: import.meta.env.VITE_FIREBASE_API_KEY,

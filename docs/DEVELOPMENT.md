@@ -16,7 +16,7 @@ npm run dev
 Run the emulators and the dev server in separate terminals. The emulator UI is at
 <http://127.0.0.1:4000>.
 
-Development mode always uses the `demo-ostergardshus` project. Firebase treats `demo-*`
+Development mode always uses the `demo-samfalligheten` project. Firebase treats `demo-*`
 projects as local only, so development cannot reach production data.
 
 ## Checks

@@ -1,4 +1,4 @@
-# Östergårdshus Samfällighetsförening – webbplats & styrelseportal
+# Samfälligheten – webbplats & styrelseportal
 
 En enkel webbplats och styrelseportal för en samfällighetsförening, byggd för att ersätta nuvarande Google Sites-sida.
 Inspiration: gemensamheten.se (publik hemsida + styrelseportal), men smalare och anpassad efter vår styrelse.
@@ -19,7 +19,7 @@ Inspiration: gemensamheten.se (publik hemsida + styrelseportal), men smalare och
 - **Cloud Firestore** – all strukturerad data. **EU-region** (t.ex. `europe-north1`), samma region för Storage och Functions. Regionen kan inte ändras i efterhand.
 - **Cloud Storage for Firebase** – dokumentarkiv (PDF:er) och nyhetsbilder.
 - **Cloud Functions (2nd gen, TypeScript)** – mejlutskick och admin-operationer (sätta roller via custom claims, radera medlem).
-- **Mejl:** Nodemailer via föreningens Google Workspace-konto (t.ex. `info@ostergardshus.se`). Inloggningsuppgifter lagras som Functions-secret, aldrig i koden.
+- **Mejl:** Nodemailer via föreningens Google Workspace-konto (t.ex. `info@<föreningens-domän>`). Inloggningsuppgifter lagras som Functions-secret, aldrig i koden.
 - **Firebase Emulator Suite** för all lokal utveckling.
 - INTE: Google Analytics, tracking, cookies-banners-behövande skript, externa mejltjänster, externa databaser.
 

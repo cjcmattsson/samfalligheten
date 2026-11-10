@@ -1,4 +1,4 @@
-# Östergårdshus samfällighetsförening
+# Samfälligheten
 
 Webbplats och styrelseportal för föreningen. Projektet är under uppbyggnad och ersätter
 på sikt dagens Google Sites-sida.
