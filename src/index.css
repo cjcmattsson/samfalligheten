@@ -1,14 +1,116 @@
 @import "tailwindcss";
 
-@theme {
-  --color-brand-50: #f0f6f2;
-  --color-brand-100: #dcebe1;
-  --color-brand-700: #2c6246;
-  --color-brand-800: #234f39;
-  --color-brand-900: #1b3d2c;
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  --canvas: #f8f5ef;
+  --surface: #fffdf9;
+  --sunken: #f0ebe2;
+  --ink: #1e2a32;
+  --muted: #566169;
+  --line: #e3dccf;
+  --accent: #a84c1a;
+  --ok: #24613f;
+  --ok-soft: #e0f0e6;
+  --warn: #7a4f00;
+  --warn-soft: #fbeed0;
+  --danger: #a12d1b;
+  --danger-soft: #fbe4df;
+  --brand: #1f4b63;
+  --brand-ink: #ffffff;
+  --brand-soft: #dfeaf0;
+  --brand-text: #1a4259;
+}
+
+:root[data-theme="dark"] {
+  --canvas: #12191e;
+  --surface: #1a242b;
+  --sunken: #222e36;
+  --ink: #eef1f2;
+  --muted: #a4b0b7;
+  --line: #2f3c45;
+  --accent: #e59a67;
+  --ok: #7ed0a0;
+  --ok-soft: #1b3a2a;
+  --warn: #eec36e;
+  --warn-soft: #3d3012;
+  --danger: #f2a396;
+  --danger-soft: #4a211b;
+  --brand: #7fb8d6;
+  --brand-ink: #0e1a21;
+  --brand-soft: #213846;
+  --brand-text: #a9d2e6;
+}
+
+:root[data-palette="skog"] {
+  --brand: #28583f;
+  --brand-soft: #dfece4;
+  --brand-text: #204a34;
+}
+
+:root[data-palette="skog"][data-theme="dark"] {
+  --brand: #8accaa;
+  --brand-ink: #0d1c14;
+  --brand-soft: #1f3a2c;
+  --brand-text: #a9dcc1;
+}
+
+:root[data-palette="falu"] {
+  --brand: #8a2f22;
+  --brand-soft: #f5e2dd;
+  --brand-text: #74261b;
+}
+
+:root[data-palette="falu"][data-theme="dark"] {
+  --brand: #eb9c8e;
+  --brand-ink: #24100c;
+  --brand-soft: #472620;
+  --brand-text: #f3bcb1;
+}
+
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-sunken: var(--sunken);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-brand: var(--brand);
+  --color-brand-ink: var(--brand-ink);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-text: var(--brand-text);
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html {
+  background: var(--canvas);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-brand-700);
+  outline: 2px solid var(--brand);
   outline-offset: 2px;
+}
+
+dialog::backdrop {
+  background: rgb(10 16 20 / 0.5);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
 }

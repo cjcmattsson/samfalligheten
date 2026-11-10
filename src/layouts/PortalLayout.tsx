@@ -1,42 +1,118 @@
-import { Link, NavLink, Outlet } from "react-router";
-import { SkipLink } from "../components/SkipLink";
+import { useState } from "react";
+import { Link, NavLink, Outlet, useLocation } from "react-router";
+import { Icon } from "../components/icons";
+import { ScrollToTop, SkipLink, ThemeToggle } from "../components/layout-bits";
+import { useStore } from "../demo/store";
 import { portalNav } from "../navigation";
 
 function navLinkClass({ isActive }: { isActive: boolean }) {
-  return `block rounded px-3 py-2 text-sm font-medium whitespace-nowrap ${
-    isActive ? "bg-brand-800 text-white" : "text-stone-700 hover:bg-stone-200"
+  return `flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium ${
+    isActive ? "bg-brand text-brand-ink" : "text-ink hover:bg-sunken"
   }`;
 }
 
-export function PortalLayout() {
+function SidebarContent() {
+  const { association, members, news } = useStore();
+  const bounced = members.filter((member) => member.bounced).length;
+  const drafts = news.filter((item) => item.status === "draft").length;
+  const badges: Record<string, number> = {
+    "/portal/medlemmar": bounced,
+    "/portal/nyheter": drafts,
+  };
+
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900 md:flex">
+    <div className="flex h-full flex-col">
+      <div className="px-5 py-5">
+        <Link to="/portal" className="font-display text-lg font-semibold text-brand-text">
+          {association.shortName}
+        </Link>
+        <p className="text-xs text-muted">Styrelseportal</p>
+      </div>
+      <nav aria-label="Portalmeny" className="flex-1 overflow-y-auto px-3 pb-4">
+        {portalNav.map((group, index) => (
+          <div key={index} className="mb-4">
+            {group.heading && (
+              <p className="mb-1 px-3 text-xs font-semibold uppercase tracking-wider text-muted">
+                {group.heading}
+              </p>
+            )}
+            <ul className="grid gap-0.5">
+              {group.links.map((link) => (
+                <li key={link.to}>
+                  <NavLink to={link.to} end={link.to === "/portal"} className={navLinkClass}>
+                    <Icon name={link.icon} className="size-4.5" />
+                    <span className="flex-1">{link.label}</span>
+                    {badges[link.to] > 0 && (
+                      <span className="rounded-full bg-warn-soft px-2 text-xs font-bold text-warn">
+                        {badges[link.to]}
+                      </span>
+                    )}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </nav>
+      <div className="border-t border-line p-3">
+        <div className="flex items-center gap-3 px-2 py-1">
+          <span className="grid size-9 place-items-center rounded-full bg-brand-soft text-sm font-bold text-brand-text">
+            IM
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold">Ingrid Malm</p>
+            <p className="text-xs text-muted">Administratör</p>
+          </div>
+          <ThemeToggle />
+        </div>
+        <div className="mt-1 flex gap-1">
+          <Link to="/" className="flex flex-1 items-center gap-2 whitespace-nowrap rounded-lg px-2 py-2 text-sm text-muted hover:bg-sunken hover:text-ink">
+            <Icon name="globe" className="size-4" /> Webbplatsen
+          </Link>
+          <Link to="/logga-in" className="flex items-center gap-2 whitespace-nowrap rounded-lg px-2 py-2 text-sm text-muted hover:bg-sunken hover:text-ink">
+            <Icon name="logout" className="size-4" /> Logga ut
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function PortalLayout() {
+  const { pathname } = useLocation();
+  const [openedAt, setOpenedAt] = useState<string | null>(null);
+  const menuOpen = openedAt === pathname;
+
+  return (
+    <div className="min-h-screen bg-canvas text-ink lg:pl-64">
       <SkipLink />
-      <aside className="border-b border-stone-200 bg-stone-100 md:w-60 md:shrink-0 md:border-b-0 md:border-r">
-        <div className="px-4 py-4">
-          <Link to="/portal" className="font-semibold text-brand-900">
-            Styrelseportal
-          </Link>
-        </div>
-        <nav aria-label="Portalmeny" className="overflow-x-auto px-2 pb-3">
-          <ul className="flex gap-1 md:flex-col">
-            {portalNav.map((item) => (
-              <li key={item.to}>
-                <NavLink to={item.to} end={item.to === "/portal"} className={navLinkClass}>
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
-        <div className="hidden px-4 py-4 text-sm md:block">
-          <Link to="/" className="text-stone-700 underline">
-            Till webbplatsen
-          </Link>
-        </div>
+      <ScrollToTop />
+      <aside className="fixed inset-y-0 left-0 hidden w-64 border-r border-line bg-surface lg:block">
+        <SidebarContent />
       </aside>
 
-      <main id="main" className="min-w-0 flex-1 px-4 py-8 md:px-10">
+      <div className="sticky top-0 z-30 flex items-center justify-between border-b border-line bg-surface px-4 py-2.5 lg:hidden">
+        <Link to="/portal" className="font-display text-lg font-semibold text-brand-text">
+          Styrelseportal
+        </Link>
+        <button type="button" onClick={() => setOpenedAt(pathname)} aria-label="Öppna meny" className="rounded-lg p-2 hover:bg-sunken">
+          <Icon name="menu" />
+        </button>
+      </div>
+
+      {menuOpen && (
+        <div className="fixed inset-0 z-40 lg:hidden">
+          <button type="button" aria-label="Stäng meny" onClick={() => setOpenedAt(null)} className="absolute inset-0 bg-black/50" />
+          <aside className="absolute inset-y-0 left-0 w-72 max-w-[85%] bg-surface">
+            <SidebarContent />
+          </aside>
+        </div>
+      )}
+
+      <p className="bg-warn-soft px-4 py-2 text-center text-sm font-medium text-warn">
+        Förhandsversion med påhittade exempeluppgifter. Ändringar försvinner när sidan laddas om.
+      </p>
+      <main id="main" className="mx-auto max-w-6xl px-4 py-8 sm:px-8">
         <Outlet />
       </main>
     </div>

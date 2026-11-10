@@ -19,6 +19,12 @@ Run the emulators and the dev server in separate terminals. The emulator UI is a
 Development mode always uses the `demo-samfalligheten` project. Firebase treats `demo-*`
 projects as local only, so development cannot reach production data.
 
+## Sample data
+
+The UI currently reads from `src/demo/`, an in-memory store with fictional data. Each phase
+replaces its part of that store with Firestore. Delete `src/demo/` when the last part is
+connected. The portal is not protected until phase 2.
+
 ## Checks
 
 ```bash
