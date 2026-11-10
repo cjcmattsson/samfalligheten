@@ -1,4 +1,5 @@
 import { Link } from "react-router";
+import { useMember } from "../../auth/AuthContext";
 import { Icon, type IconName } from "../../components/icons";
 import { Badge, Card, LinkButton, PageHeader } from "../../components/ui";
 import { useStore } from "../../demo/store";
@@ -8,6 +9,7 @@ type Todo = { icon: IconName; title: string; detail: string; to: string; tone: s
 
 export function OverviewPage() {
   const { members, news, tasks, setTasks, steps, assemblyDate, docs } = useStore();
+  const member = useMember();
 
   const month = new Date().getMonth() + 1;
   const monthTasks = tasks.filter((task) => task.month === month);
@@ -50,7 +52,7 @@ export function OverviewPage() {
   return (
     <>
       <PageHeader
-        title="Hej Ingrid"
+        title={`Hej ${member.name.split(" ")[0]}`}
         description={
           todos.length ? `Det finns ${todos.length} saker som väntar på styrelsen.` : "Allt är i fas just nu."
         }

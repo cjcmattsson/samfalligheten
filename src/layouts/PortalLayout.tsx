@@ -1,8 +1,11 @@
+import { signOut } from "firebase/auth";
 import { useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router";
+import { useMember } from "../auth/AuthContext";
 import { Icon } from "../components/icons";
 import { ScrollToTop, SkipLink, ThemeToggle } from "../components/layout-bits";
 import { useStore } from "../demo/store";
+import { auth } from "../lib/firebase";
 import { portalNav } from "../navigation";
 
 function navLinkClass({ isActive }: { isActive: boolean }) {
@@ -13,6 +16,13 @@ function navLinkClass({ isActive }: { isActive: boolean }) {
 
 function SidebarContent() {
   const { association, members, news } = useStore();
+  const member = useMember();
+  const initials = member.name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
   const bounced = members.filter((member) => member.bounced).length;
   const drafts = news.filter((item) => item.status === "draft").length;
   const badges: Record<string, number> = {
@@ -37,7 +47,7 @@ function SidebarContent() {
               </p>
             )}
             <ul className="grid gap-0.5">
-              {group.links.map((link) => (
+              {group.links.filter((link) => !link.adminOnly || member.role === "admin").map((link) => (
                 <li key={link.to}>
                   <NavLink to={link.to} end={link.to === "/portal"} className={navLinkClass}>
                     <Icon name={link.icon} className="size-4.5" />
@@ -57,11 +67,11 @@ function SidebarContent() {
       <div className="border-t border-line p-3">
         <div className="flex items-center gap-3 px-2 py-1">
           <span className="grid size-9 place-items-center rounded-full bg-brand-soft text-sm font-bold text-brand-text">
-            IM
+            {initials}
           </span>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold">Ingrid Malm</p>
-            <p className="text-xs text-muted">Administratör</p>
+            <p className="truncate text-sm font-semibold">{member.name}</p>
+            <p className="text-xs text-muted">{member.role === "admin" ? "Administratör" : "Styrelse"}</p>
           </div>
           <ThemeToggle />
         </div>
@@ -69,9 +79,9 @@ function SidebarContent() {
           <Link to="/" className="flex flex-1 items-center gap-2 whitespace-nowrap rounded-lg px-2 py-2 text-sm text-muted hover:bg-sunken hover:text-ink">
             <Icon name="globe" className="size-4" /> Webbplatsen
           </Link>
-          <Link to="/logga-in" className="flex items-center gap-2 whitespace-nowrap rounded-lg px-2 py-2 text-sm text-muted hover:bg-sunken hover:text-ink">
+          <button type="button" onClick={() => void signOut(auth)} className="flex items-center gap-2 whitespace-nowrap rounded-lg px-2 py-2 text-sm text-muted hover:bg-sunken hover:text-ink">
             <Icon name="logout" className="size-4" /> Logga ut
-          </Link>
+          </button>
         </div>
       </div>
     </div>
@@ -110,7 +120,7 @@ export function PortalLayout() {
       )}
 
       <p className="bg-warn-soft px-4 py-2 text-center text-sm font-medium text-warn">
-        Förhandsversion med påhittade exempeluppgifter. Ändringar försvinner när sidan laddas om.
+        Innehållet är påhittat tills varje del har kopplats på. Ändringar försvinner när sidan laddas om.
       </p>
       <main id="main" className="mx-auto max-w-6xl px-4 py-8 sm:px-8">
         <Outlet />

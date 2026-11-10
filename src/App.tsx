@@ -1,4 +1,6 @@
 import { Route, Routes } from "react-router";
+import { AuthBoundary } from "./auth/AuthContext";
+import { RequireAdmin, RequireBoard } from "./auth/guards";
 import { PortalLayout } from "./layouts/PortalLayout";
 import { PublicLayout } from "./layouts/PublicLayout";
 import { LoginPage } from "./pages/LoginPage";
@@ -33,23 +35,27 @@ export function App() {
         <Route path=":slug" element={<InfoPage />} />
       </Route>
 
-      <Route path="logga-in" element={<LoginPage />} />
-
-      {/* Uses fictional sample data only. Phase 2 adds login and protected routes. */}
-      <Route path="portal" element={<PortalLayout />}>
-        <Route index element={<OverviewPage />} />
-        <Route path="nyheter" element={<NewsAdminPage />} />
-        <Route path="nyheter/ny" element={<NewsEditorPage />} />
-        <Route path="nyheter/:id" element={<NewsEditorPage />} />
-        <Route path="utskick" element={<MailingsPage />} />
-        <Route path="sidor" element={<PagesAdminPage />} />
-        <Route path="sidor/:slug" element={<PageEditorPage />} />
-        <Route path="dokument" element={<DocumentsAdminPage />} />
-        <Route path="medlemmar" element={<MembersPage />} />
-        <Route path="arshjul" element={<YearWheelPage />} />
-        <Route path="installningar" element={<SettingsPage />} />
-        <Route path="exportera" element={<ExportPage />} />
-        <Route path="*" element={<NotFoundPage />} />
+      <Route element={<AuthBoundary />}>
+        <Route path="logga-in" element={<LoginPage />} />
+        <Route element={<RequireBoard />}>
+          <Route path="portal" element={<PortalLayout />}>
+            <Route index element={<OverviewPage />} />
+            <Route path="nyheter" element={<NewsAdminPage />} />
+            <Route path="nyheter/ny" element={<NewsEditorPage />} />
+            <Route path="nyheter/:id" element={<NewsEditorPage />} />
+            <Route path="utskick" element={<MailingsPage />} />
+            <Route path="sidor" element={<PagesAdminPage />} />
+            <Route path="sidor/:slug" element={<PageEditorPage />} />
+            <Route path="dokument" element={<DocumentsAdminPage />} />
+            <Route path="medlemmar" element={<MembersPage />} />
+            <Route path="arshjul" element={<YearWheelPage />} />
+            <Route path="installningar" element={<SettingsPage />} />
+            <Route element={<RequireAdmin />}>
+              <Route path="exportera" element={<ExportPage />} />
+            </Route>
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Route>
       </Route>
 
       <Route path="*" element={<NotFoundPage />} />

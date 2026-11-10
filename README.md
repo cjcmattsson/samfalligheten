@@ -7,7 +7,8 @@ på sikt dagens Google Sites-sida.
 
 - **Webbplatsen** är den publika delen som alla kan läsa.
 - **Styrelseportalen** är den del där styrelsen sköter innehåll och medlemsregister.
-  Inloggningen är inte byggd ännu.
+  Man loggar in med en länk som skickas till e-posten. Bara personer som en administratör
+  har bjudit in kommer in, och inbjudningar görs under Inställningar.
 - **Koden** ligger på GitHub.
 
 Ägarskap, driftinformation och vad man gör om något slutar fungera fylls i innan

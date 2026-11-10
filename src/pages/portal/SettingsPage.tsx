@@ -1,9 +1,18 @@
 import { useState, type FormEvent } from "react";
+import { useMember } from "../../auth/AuthContext";
 import { Icon } from "../../components/icons";
 import { Badge, Button, Card, ConfirmDialog, Field, Modal, PageHeader, Switch, inputClass } from "../../components/ui";
-import type { BoardMember } from "../../demo/data";
 import { useStore, type Palette } from "../../demo/store";
-import { createId } from "../../lib/format";
+import {
+  errorMessage,
+  inviteBoardMember,
+  removeBoardMember,
+  sendLoginLink,
+  updateBoardMember,
+  useBoardMembers,
+  type BoardMember,
+  type Role,
+} from "../../lib/board";
 
 const palettes: { id: Palette; label: string; color: string }[] = [
   { id: "fjord", label: "Fjord", color: "#1f4b63" },
@@ -19,13 +28,17 @@ const handover = [
 ];
 
 export function SettingsPage() {
-  const { association, setAssociation, board, setBoard, palette, setPalette, toast } = useStore();
+  const { association, setAssociation, palette, setPalette, toast } = useStore();
+  const currentMember = useMember();
+  const board = useBoardMembers();
   const [details, setDetails] = useState(association);
   const [inviting, setInviting] = useState(false);
+  const [busy, setBusy] = useState(false);
   const [removing, setRemoving] = useState<BoardMember | null>(null);
   const [checked, setChecked] = useState<string[]>([]);
 
-  const admins = board.filter((person) => person.role === "admin").length;
+  const isAdmin = currentMember.role === "admin";
+  const admins = board?.filter((person) => person.role === "admin").length ?? 0;
 
   function saveDetails(event: FormEvent) {
     event.preventDefault();
@@ -33,27 +46,56 @@ export function SettingsPage() {
     toast("Föreningsuppgifterna är sparade");
   }
 
-  function invite(event: FormEvent<HTMLFormElement>) {
+  async function invite(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    setBoard((all) => [
-      ...all,
-      {
-        id: createId(),
+    const email = String(form.get("email")).trim().toLowerCase();
+    setBusy(true);
+    try {
+      await inviteBoardMember({
         name: String(form.get("name")),
-        email: String(form.get("email")),
+        email,
         title: String(form.get("title")),
         role: form.get("role") === "admin" ? "admin" : "board",
-        showPublic: false,
-        pending: true,
-      },
-    ]);
-    setInviting(false);
-    toast("Inbjudan är skickad");
+      });
+      await sendLoginLink(email);
+      setInviting(false);
+      toast("Inbjudan är skickad");
+    } catch (error) {
+      toast(errorMessage(error));
+    } finally {
+      setBusy(false);
+    }
   }
 
-  const update = (id: string, patch: Partial<BoardMember>) =>
-    setBoard((all) => all.map((person) => (person.id === id ? { ...person, ...patch } : person)));
+  async function update(uid: string, changes: { role?: Role; showPublic?: boolean }) {
+    try {
+      await updateBoardMember({ uid, ...changes });
+    } catch (error) {
+      toast(errorMessage(error));
+    }
+  }
+
+  async function remove() {
+    if (!removing) return;
+    const uid = removing.id;
+    setRemoving(null);
+    try {
+      await removeBoardMember({ uid });
+      toast("Åtkomsten är borttagen");
+    } catch (error) {
+      toast(errorMessage(error));
+    }
+  }
+
+  async function resend(email: string) {
+    try {
+      await sendLoginLink(email);
+      toast("Inbjudan är skickad igen");
+    } catch {
+      toast("Det gick inte att skicka inbjudan.");
+    }
+  }
 
   const field = (key: keyof typeof details, label: string, type = "text") => (
     <Field label={label}>
@@ -68,46 +110,63 @@ export function SettingsPage() {
         <Card className="overflow-hidden">
           <div className="flex items-center justify-between gap-3 border-b border-line px-5 py-4">
             <h2 className="font-display text-lg font-semibold">Styrelsen</h2>
-            <Button variant="secondary" icon="plus" onClick={() => setInviting(true)}>
-              Bjud in
-            </Button>
+            {isAdmin && (
+              <Button variant="secondary" icon="plus" onClick={() => setInviting(true)}>
+                Bjud in
+              </Button>
+            )}
           </div>
+          {board === null && <p className="px-5 py-8 text-center text-muted">Laddar…</p>}
           <ul className="divide-y divide-line">
-            {board.map((person) => (
-              <li key={person.id} className="flex flex-wrap items-center gap-x-4 gap-y-3 px-5 py-4">
-                <div className="min-w-0 flex-1 basis-52">
-                  <p className="flex flex-wrap items-center gap-2 font-semibold">
-                    {person.name} {person.pending && <Badge tone="warn">Inbjuden</Badge>}
-                  </p>
-                  <p className="text-sm text-muted">
-                    {person.title} · {person.email}
-                  </p>
-                </div>
-                <select
-                  value={person.role}
-                  aria-label={`Roll för ${person.name}`}
-                  disabled={person.role === "admin" && admins === 1}
-                  onChange={(e) => update(person.id, { role: e.target.value as BoardMember["role"] })}
-                  className={`${inputClass.replace("w-full", "w-auto")} text-sm`}
-                >
-                  <option value="admin">Administratör</option>
-                  <option value="board">Styrelse</option>
-                </select>
-                <span className="flex items-center gap-2 text-sm text-muted">
-                  På webbplatsen
-                  <Switch checked={person.showPublic} label={`Visa ${person.name} på webbplatsen`} onChange={(showPublic) => update(person.id, { showPublic })} />
-                </span>
-                <button
-                  type="button"
-                  disabled={person.role === "admin" && admins === 1}
-                  onClick={() => setRemoving(person)}
-                  aria-label={`Ta bort ${person.name}`}
-                  className="rounded p-1 text-muted hover:text-danger disabled:opacity-30"
-                >
-                  <Icon name="trash" className="size-4" />
-                </button>
-              </li>
-            ))}
+            {board?.map((person) => {
+              const lastAdmin = person.role === "admin" && admins === 1;
+              return (
+                <li key={person.id} className="flex flex-wrap items-center gap-x-4 gap-y-3 px-5 py-4">
+                  <div className="min-w-0 flex-1 basis-52">
+                    <p className="flex flex-wrap items-center gap-2 font-semibold">
+                      {person.name} {person.pending && <Badge tone="warn">Inbjuden</Badge>}
+                    </p>
+                    <p className="text-sm text-muted">
+                      {person.title} · {person.email}
+                    </p>
+                  </div>
+                  {isAdmin ? (
+                    <>
+                      {person.pending && (
+                        <Button variant="ghost" onClick={() => void resend(person.email)}>
+                          Skicka igen
+                        </Button>
+                      )}
+                      <select
+                        value={person.role}
+                        aria-label={`Roll för ${person.name}`}
+                        disabled={lastAdmin}
+                        onChange={(e) => void update(person.id, { role: e.target.value as Role })}
+                        className={`${inputClass.replace("w-full", "w-auto")} text-sm`}
+                      >
+                        <option value="admin">Administratör</option>
+                        <option value="board">Styrelse</option>
+                      </select>
+                      <span className="flex items-center gap-2 text-sm text-muted">
+                        På webbplatsen
+                        <Switch checked={person.showPublic} label={`Visa ${person.name} på webbplatsen`} onChange={(showPublic) => void update(person.id, { showPublic })} />
+                      </span>
+                      <button
+                        type="button"
+                        disabled={lastAdmin}
+                        onClick={() => setRemoving(person)}
+                        aria-label={`Ta bort ${person.name}`}
+                        className="rounded p-1 text-muted hover:text-danger disabled:opacity-30"
+                      >
+                        <Icon name="trash" className="size-4" />
+                      </button>
+                    </>
+                  ) : (
+                    <Badge>{person.role === "admin" ? "Administratör" : "Styrelse"}</Badge>
+                  )}
+                </li>
+              );
+            })}
           </ul>
         </Card>
 
@@ -180,14 +239,14 @@ export function SettingsPage() {
           <Field label="Uppdrag">
             <input name="title" required placeholder="Till exempel Ledamot" className={inputClass} />
           </Field>
-          <Field label="Roll" hint="En administratör kan också hantera styrelsen och inställningarna.">
+          <Field label="Roll" hint="En administratör kan också hantera styrelsen och exportera allt.">
             <select name="role" defaultValue="board" className={inputClass}>
               <option value="board">Styrelse</option>
               <option value="admin">Administratör</option>
             </select>
           </Field>
-          <Button type="submit" icon="mail">
-            Skicka inbjudan
+          <Button type="submit" icon="mail" disabled={busy}>
+            {busy ? "Skickar…" : "Skicka inbjudan"}
           </Button>
         </form>
       </Modal>
@@ -197,13 +256,9 @@ export function SettingsPage() {
         title="Ta bort från styrelsen?"
         confirmLabel="Ta bort åtkomst"
         onClose={() => setRemoving(null)}
-        onConfirm={() => {
-          setBoard((all) => all.filter((person) => person.id !== removing?.id));
-          setRemoving(null);
-          toast("Åtkomsten är borttagen");
-        }}
+        onConfirm={() => void remove()}
       >
-        {removing?.name} förlorar åtkomsten till portalen direkt.
+        {removing?.name} förlorar åtkomsten till portalen direkt och kontot raderas.
       </ConfirmDialog>
     </>
   );

@@ -1,6 +1,6 @@
 import type { IconName } from "./components/icons";
 
-type PortalLink = { to: string; label: string; icon: IconName };
+type PortalLink = { to: string; label: string; icon: IconName; adminOnly?: boolean };
 
 export const portalNav: { heading?: string; links: PortalLink[] }[] = [
   { links: [{ to: "/portal", label: "Översikt", icon: "home" }] },
@@ -24,7 +24,7 @@ export const portalNav: { heading?: string; links: PortalLink[] }[] = [
     heading: "Administration",
     links: [
       { to: "/portal/installningar", label: "Inställningar", icon: "settings" },
-      { to: "/portal/exportera", label: "Exportera allt", icon: "download" },
+      { to: "/portal/exportera", label: "Exportera allt", icon: "download", adminOnly: true },
     ],
   },
 ];

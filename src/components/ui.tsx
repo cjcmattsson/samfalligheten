@@ -218,6 +218,14 @@ export function ConfirmDialog({
   );
 }
 
+export function LoadingScreen() {
+  return (
+    <div role="status" className="grid min-h-screen place-items-center bg-canvas text-muted">
+      Laddar…
+    </div>
+  );
+}
+
 export function EmptyState({ icon, title, children }: { icon: IconName; title: string; children?: ReactNode }) {
   return (
     <div className="px-6 py-14 text-center">
