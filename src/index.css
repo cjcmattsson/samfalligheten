@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #f0f6f2;
+  --color-brand-100: #dcebe1;
+  --color-brand-700: #2c6246;
+  --color-brand-800: #234f39;
+  --color-brand-900: #1b3d2c;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-700);
+  outline-offset: 2px;
+}
