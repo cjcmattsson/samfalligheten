@@ -1,0 +1,10 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Deny by default. Each collection gets an explicit rule when its feature is built.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
