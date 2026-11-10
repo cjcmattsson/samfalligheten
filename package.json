@@ -8,13 +8,15 @@
   },
   "scripts": {
     "dev": "vite",
-    "emulators": "firebase emulators:start --project demo-samfalligheten",
+    "emulators": "npm --prefix functions run build && firebase emulators:start --project demo-samfalligheten",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run --dir src --passWithNoTests",
     "test:rules": "firebase emulators:exec --only firestore,storage --project demo-samfalligheten \"vitest run --dir tests/rules\"",
     "build": "npm run typecheck && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "seed": "node functions/scripts/create-admin.mjs admin@example.com \"Test Admin\"",
+    "test:functions": "npm --prefix functions run build && firebase emulators:exec --only auth,firestore,functions --project demo-samfalligheten \"vitest run --dir tests/functions\""
   },
   "dependencies": {
     "firebase": "^13.2.0",

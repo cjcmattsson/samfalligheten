@@ -2,6 +2,22 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // A token is valid for up to an hour, so the document is what ends access immediately.
+    function isBoard() {
+      return request.auth != null
+        && request.auth.token.role in ['admin', 'board']
+        && exists(/databases/$(database)/documents/boardMembers/$(request.auth.uid));
+    }
+
+    // All other changes go through Cloud Functions.
+    match /boardMembers/{uid} {
+      allow read: if isBoard();
+      allow update: if isBoard()
+        && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['pending'])
+        && request.resource.data.pending == false;
+    }
+
     // Deny by default. Each collection gets an explicit rule when its feature is built.
     match /{document=**} {
       allow read, write: if false;
