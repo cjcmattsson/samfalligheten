@@ -1,11 +1,12 @@
 import { signOut } from "firebase/auth";
 import { useState } from "react";
-import { Link, NavLink, Outlet, useLocation } from "react-router";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import { useMember } from "../auth/AuthContext";
 import { Icon } from "../components/icons";
 import { ScrollToTop, SkipLink, ThemeToggle } from "../components/layout-bits";
 import { useStore } from "../demo/store";
 import { auth } from "../lib/firebase";
+import { isDemo } from "../lib/mode";
 import { portalNav } from "../navigation";
 
 function navLinkClass({ isActive }: { isActive: boolean }) {
@@ -17,6 +18,7 @@ function navLinkClass({ isActive }: { isActive: boolean }) {
 function SidebarContent() {
   const { association, members, news } = useStore();
   const member = useMember();
+  const navigate = useNavigate();
   const initials = member.name
     .split(" ")
     .map((part) => part[0])
@@ -79,7 +81,7 @@ function SidebarContent() {
           <Link to="/" className="flex flex-1 items-center gap-2 whitespace-nowrap rounded-lg px-2 py-2 text-sm text-muted hover:bg-sunken hover:text-ink">
             <Icon name="globe" className="size-4" /> Webbplatsen
           </Link>
-          <button type="button" onClick={() => void signOut(auth)} className="flex items-center gap-2 whitespace-nowrap rounded-lg px-2 py-2 text-sm text-muted hover:bg-sunken hover:text-ink">
+          <button type="button" onClick={() => (isDemo ? navigate("/") : void signOut(auth))} className="flex items-center gap-2 whitespace-nowrap rounded-lg px-2 py-2 text-sm text-muted hover:bg-sunken hover:text-ink">
             <Icon name="logout" className="size-4" /> Logga ut
           </button>
         </div>

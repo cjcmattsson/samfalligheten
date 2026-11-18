@@ -3,7 +3,9 @@ import { sendSignInLinkToEmail } from "firebase/auth";
 import { collection, onSnapshot } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
 import { useEffect, useState } from "react";
+import { useStore } from "../demo/store";
 import { auth, db, functions } from "./firebase";
+import { isDemo } from "./mode";
 
 export type Role = "admin" | "board";
 
@@ -25,18 +27,21 @@ export function sendLoginLink(email: string) {
 }
 
 export function useBoardMembers() {
+  const { board } = useStore();
   const [members, setMembers] = useState<BoardMember[] | null>(null);
 
   useEffect(
     () =>
-      onSnapshot(collection(db, "boardMembers"), (snapshot) => {
+      isDemo
+        ? undefined
+        : onSnapshot(collection(db, "boardMembers"), (snapshot) => {
         const list = snapshot.docs.map((item) => ({ id: item.id, ...item.data() }) as BoardMember);
         setMembers(list.sort((a, b) => a.name.localeCompare(b.name, "sv")));
       }),
     [],
   );
 
-  return members;
+  return isDemo ? board : members;
 }
 
 export const inviteBoardMember = httpsCallable<

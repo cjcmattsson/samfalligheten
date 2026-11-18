@@ -1,5 +1,6 @@
 import type { Member } from "../demo/data";
 import { createId, today } from "./format";
+import { isDemo } from "./mode";
 
 const CSV_COLUMNS = ["Namn", "Fastighet", "Adress", "E-post", "Telefon"];
 
@@ -41,7 +42,12 @@ export function parseMembersCsv(text: string): Member[] {
     .filter((member) => member.name);
 }
 
-export function downloadFile(name: string, content: string, type: string) {
+// Shared demo pages block downloads, so the demo explains that instead of failing silently.
+export function downloadFile(name: string, content: string, type: string, onBlocked?: () => void) {
+  if (isDemo) {
+    onBlocked?.();
+    return;
+  }
   const url = URL.createObjectURL(new Blob([content], { type }));
   const link = document.createElement("a");
   link.href = url;

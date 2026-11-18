@@ -71,3 +71,9 @@ from `.env.production`, which is not committed.
 
 Create Firestore, Storage and Functions in the same EU region, for example `europe-north1`.
 The Firestore region cannot be changed later.
+
+## Shareable demo
+
+`npm run build:demo -- <output.html>` builds a single self-contained page with the fictional
+sample data. The portal opens without sign-in, nothing is sent to Firebase, and downloads are
+turned off. It is meant for showing the design to others, for example as a Claude artifact.

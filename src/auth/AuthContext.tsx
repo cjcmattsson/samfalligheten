@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { Outlet } from "react-router";
 import type { BoardMember } from "../lib/board";
 import { auth, db } from "../lib/firebase";
+import { isDemo } from "../lib/mode";
 
 type AuthState =
   | { status: "loading" }
@@ -11,6 +12,19 @@ type AuthState =
   | { status: "signedIn"; member: BoardMember };
 
 const AuthContext = createContext<AuthState>({ status: "loading" });
+
+const demoState: AuthState = {
+  status: "signedIn",
+  member: {
+    id: "demo",
+    name: "Ingrid Malm",
+    email: "ordforande@example.se",
+    title: "Ordförande",
+    role: "admin",
+    showPublic: true,
+    pending: false,
+  },
+};
 
 // Someone not on the board can still finish an email link. Their account is removed
 // straight away, so the association does not keep the address of an outsider.
@@ -25,9 +39,10 @@ async function rejectUser(user: User) {
 
 // Rendered only around the login page and the portal, so public visitors never load a session.
 export function AuthBoundary() {
-  const [state, setState] = useState<AuthState>({ status: "loading" });
+  const [state, setState] = useState<AuthState>(isDemo ? demoState : { status: "loading" });
 
   useEffect(() => {
+    if (isDemo) return;
     let stopMember = () => {};
     let denied = false;
 

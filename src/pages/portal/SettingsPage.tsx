@@ -13,6 +13,8 @@ import {
   type BoardMember,
   type Role,
 } from "../../lib/board";
+import { createId } from "../../lib/format";
+import { isDemo } from "../../lib/mode";
 
 const palettes: { id: Palette; label: string; color: string }[] = [
   { id: "fjord", label: "Fjord", color: "#1f4b63" },
@@ -28,7 +30,7 @@ const handover = [
 ];
 
 export function SettingsPage() {
-  const { association, setAssociation, palette, setPalette, toast } = useStore();
+  const { association, setAssociation, setBoard, palette, setPalette, toast } = useStore();
   const currentMember = useMember();
   const board = useBoardMembers();
   const [details, setDetails] = useState(association);
@@ -50,6 +52,23 @@ export function SettingsPage() {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
     const email = String(form.get("email")).trim().toLowerCase();
+    if (isDemo) {
+      setBoard((all) => [
+        ...all,
+        {
+          id: createId(),
+          name: String(form.get("name")),
+          email,
+          title: String(form.get("title")),
+          role: form.get("role") === "admin" ? "admin" : "board",
+          showPublic: false,
+          pending: true,
+        },
+      ]);
+      setInviting(false);
+      toast("Inbjudan är skickad");
+      return;
+    }
     setBusy(true);
     try {
       await inviteBoardMember({
@@ -69,6 +88,10 @@ export function SettingsPage() {
   }
 
   async function update(uid: string, changes: { role?: Role; showPublic?: boolean }) {
+    if (isDemo) {
+      setBoard((all) => all.map((person) => (person.id === uid ? { ...person, ...changes } : person)));
+      return;
+    }
     try {
       await updateBoardMember({ uid, ...changes });
     } catch (error) {
@@ -80,6 +103,11 @@ export function SettingsPage() {
     if (!removing) return;
     const uid = removing.id;
     setRemoving(null);
+    if (isDemo) {
+      setBoard((all) => all.filter((person) => person.id !== uid));
+      toast("Åtkomsten är borttagen");
+      return;
+    }
     try {
       await removeBoardMember({ uid });
       toast("Åtkomsten är borttagen");
@@ -89,6 +117,10 @@ export function SettingsPage() {
   }
 
   async function resend(email: string) {
+    if (isDemo) {
+      toast("Inbjudan är skickad igen");
+      return;
+    }
     try {
       await sendLoginLink(email);
       toast("Inbjudan är skickad igen");

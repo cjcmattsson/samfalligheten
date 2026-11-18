@@ -7,11 +7,12 @@
     <title>Östergårdshus samfällighetsförening</title>
     <script>
       try {
+        var root = document.documentElement;
         var saved = localStorage.getItem("theme");
         var dark = matchMedia("(prefers-color-scheme: dark)").matches;
-        document.documentElement.dataset.theme = saved || (dark ? "dark" : "light");
+        if (!root.dataset.theme) root.dataset.theme = saved || (dark ? "dark" : "light");
       } catch (e) {
-        document.documentElement.dataset.theme = "light";
+        document.documentElement.dataset.theme ||= "light";
       }
     </script>
   </head>

@@ -106,7 +106,7 @@ export function MembersPage() {
               Importera
             </Button>
             <input ref={importInput} type="file" accept=".csv,text/csv" className="sr-only" tabIndex={-1} aria-label="Välj CSV-fil" onChange={(e) => importCsv(e.target.files)} />
-            <Button variant="secondary" icon="download" onClick={() => downloadFile("medlemmar.csv", membersToCsv(members), "text/csv;charset=utf-8")}>
+            <Button variant="secondary" icon="download" onClick={() => downloadFile("medlemmar.csv", membersToCsv(members), "text/csv;charset=utf-8", () => toast("Nedladdningar är avstängda i demon."))}>
               Exportera
             </Button>
             <Button icon="plus" onClick={() => { setOwnerChange(false); setEditing(blank); }}>

@@ -7,15 +7,16 @@ import { formatSize } from "../../lib/format";
 export function ExportPage() {
   const store = useStore();
   const { members, news, pages, mailings, tasks, steps, docs, folders, association, toast } = store;
+  const blocked = () => toast("Nedladdningar är avstängda i demon.");
   const totalSize = docs.reduce((sum, doc) => sum + doc.size, 0);
 
   function exportMembers() {
-    downloadFile("medlemmar.csv", membersToCsv(members), "text/csv;charset=utf-8");
+    downloadFile("medlemmar.csv", membersToCsv(members), "text/csv;charset=utf-8", blocked);
   }
 
   function exportText() {
     const content = JSON.stringify({ association, news, pages, mailings, tasks, steps, folders, docs }, null, 2);
-    downloadFile("foreningens-innehall.json", content, "application/json");
+    downloadFile("foreningens-innehall.json", content, "application/json", blocked);
   }
 
   const exports: {

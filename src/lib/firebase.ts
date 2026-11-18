@@ -4,11 +4,13 @@ import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
 import { connectFunctionsEmulator, getFunctions } from "firebase/functions";
 import { connectStorageEmulator, getStorage } from "firebase/storage";
 
+import { isDemo } from "./mode";
+
 const useEmulators = import.meta.env.DEV;
 
 // Local development always uses the demo project, so it cannot reach production.
 const app = initializeApp(
-  useEmulators
+  useEmulators || isDemo
     ? {
         apiKey: "demo-api-key",
         authDomain: "demo-samfalligheten.firebaseapp.com",

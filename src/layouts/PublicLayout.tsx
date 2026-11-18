@@ -3,6 +3,7 @@ import { Link, NavLink, Outlet, useLocation } from "react-router";
 import { Icon } from "../components/icons";
 import { ScrollToTop, SkipLink, ThemeToggle } from "../components/layout-bits";
 import { useStore } from "../demo/store";
+import { isDemo } from "../lib/mode";
 
 function navLinkClass({ isActive }: { isActive: boolean }) {
   return `block rounded-lg px-3 py-2 text-sm font-medium ${
@@ -27,6 +28,11 @@ export function PublicLayout() {
     <div className="flex min-h-screen flex-col bg-canvas text-ink">
       <SkipLink />
       <ScrollToTop />
+      {isDemo && (
+        <p className="bg-warn-soft px-4 py-2 text-center text-sm font-medium text-warn">
+          Demo av föreningens nya webbplats. Nyheter, adresser och namn är påhittade exempel.
+        </p>
+      )}
       <header className="sticky top-0 z-30 border-b border-line bg-surface/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
           <Link to="/" className="font-display text-xl font-semibold text-brand-text">
