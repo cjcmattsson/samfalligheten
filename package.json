@@ -17,7 +17,7 @@
     "preview": "vite preview",
     "seed": "node functions/scripts/create-admin.mjs admin@example.com \"Test Admin\"",
     "test:functions": "npm --prefix functions run build && firebase emulators:exec --only auth,firestore,functions --project demo-samfalligheten \"vitest run --dir tests/functions\"",
-    "build:demo": "vite build --mode demo --outDir dist-demo && node scripts/build-demo-page.mjs",
+    "build:demo": "VITE_DEMO_TARGET=artifact vite build --mode demo --outDir dist-demo && node scripts/build-demo-page.mjs",
     "deploy:demo": "vite build --mode demo --outDir dist-demo && firebase deploy --only hosting --config firebase.demo.json --project production"
   },
   "dependencies": {
