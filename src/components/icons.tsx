@@ -32,7 +32,9 @@ const paths = {
 
 export type IconName = keyof typeof paths;
 
-export function Icon({ name, className = "size-5" }: { name: IconName; className?: string }) {
+// Icons are 20px unless the caller gives a size, so a colour class alone never makes one grow.
+export function Icon({ name, className = "" }: { name: IconName; className?: string }) {
+  const sized = /(^|\s)size-/.test(className) ? className : `size-5 ${className}`;
   return (
     <svg
       aria-hidden="true"
@@ -42,7 +44,7 @@ export function Icon({ name, className = "size-5" }: { name: IconName; className
       strokeWidth="1.75"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={`shrink-0 ${className}`}
+      className={`shrink-0 ${sized}`}
     >
       <path d={paths[name]} />
     </svg>
