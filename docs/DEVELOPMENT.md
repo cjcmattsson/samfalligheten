@@ -77,3 +77,6 @@ The Firestore region cannot be changed later.
 `npm run build:demo -- <output.html>` builds a single self-contained page with the fictional
 sample data. The portal opens without sign-in, nothing is sent to Firebase, and downloads are
 turned off. It is meant for showing the design to others, for example as a Claude artifact.
+
+`npm run deploy:demo` publishes the same demo to Firebase Hosting in the production project,
+at <https://samfalligheten-710db.web.app>. The real site replaces it there once it is ready.

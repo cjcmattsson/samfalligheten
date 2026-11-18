@@ -100,3 +100,4 @@ Inspiration: gemensamheten.se (publik hemsida + styrelseportal), men smalare och
 - `npm run seed` – skapa påhittad admin i emulatorerna
 - `npm run test` / `npm run test:rules` / `npm run test:functions`
 - `npm run build` / `firebase deploy`
+- `npm run deploy:demo` – lägg upp demon på samfalligheten-710db.web.app
