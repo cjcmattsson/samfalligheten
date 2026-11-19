@@ -278,3 +278,84 @@ export const initialBoard: BoardMember[] = [
 ];
 
 export const initialAssemblyDate = "2027-03-20";
+
+export const maintenanceCategories = [
+  "Vägar",
+  "Belysning",
+  "Dagvatten",
+  "Lekplats",
+  "Grönytor",
+  "Byggnader",
+] as const;
+
+export type MaintenanceCategory = (typeof maintenanceCategories)[number];
+
+export type Condition = "god" | "acceptabel" | "atgard";
+
+// Plans hold no personal data: only parts of the property, years and amounts.
+export type MaintenanceItem = {
+  id: string;
+  title: string;
+  category: MaintenanceCategory;
+  quantity: string;
+  lastDoneYear: number;
+  intervalYears: number;
+  cost: number;
+  plannedYear?: number;
+  condition: Condition;
+  note: string;
+};
+
+export type MaintenanceFund = {
+  balance: number;
+  yearlyContribution: number;
+  showPublic: boolean;
+};
+
+export const initialMaintenance: MaintenanceItem[] = (
+  [
+    ["Ny asfaltbeläggning på vägarna", "Vägar", "1 800 m²", 2009, 25, 950000, "acceptabel"],
+    ["Lagning av sprickor och potthål", "Vägar", "Hela vägnätet", 2023, 4, 60000, "acceptabel"],
+    ["Farthinder och vägmarkering", "Vägar", "4 farthinder", 2021, 8, 25000, "god"],
+    ["Byte av belysningsstolpar", "Belysning", "42 stolpar", 1998, 30, 420000, "acceptabel"],
+    ["LED-armaturer", "Belysning", "42 armaturer", 2019, 15, 120000, "god"],
+    ["Spolning av dagvattenbrunnar", "Dagvatten", "12 brunnar", 2022, 3, 18000, "atgard"],
+    ["Filmning av dagvattenledningar", "Dagvatten", "350 m", 2018, 10, 35000, "god"],
+    ["Ny gungställning", "Lekplats", "1 ställning", 2012, 15, 45000, "acceptabel"],
+    ["Fallskydd under lekredskap", "Lekplats", "60 m²", 2020, 8, 30000, "god"],
+    ["Beskärning av träd", "Grönytor", "Ca 30 träd", 2022, 5, 40000, "god"],
+    ["Föryngring av häckar", "Grönytor", "120 m", 2024, 6, 12000, "god"],
+    ["Takbyte på soprummet", "Byggnader", "40 m²", 1996, 30, 80000, "atgard"],
+    ["Nya postlådeställ", "Byggnader", "3 ställ", 2010, 20, 30000, "acceptabel"],
+  ] as [string, MaintenanceCategory, string, number, number, number, Condition][]
+).map(([title, category, quantity, lastDoneYear, intervalYears, cost, condition], index) => ({
+  id: `u${index + 1}`,
+  title,
+  category,
+  quantity,
+  lastDoneYear,
+  intervalYears,
+  cost,
+  condition,
+  note: "",
+}));
+
+export const initialFund: MaintenanceFund = {
+  balance: 380000,
+  yearlyContribution: 150000,
+  showPublic: true,
+};
+
+export type MaintenanceDone = {
+  id: string;
+  title: string;
+  category: MaintenanceCategory;
+  year: number;
+  cost: number;
+};
+
+export const initialMaintenanceLog: MaintenanceDone[] = [
+  { id: "h1", title: "Föryngring av häckar", category: "Grönytor", year: 2024, cost: 14500 },
+  { id: "h2", title: "Lagning av sprickor och potthål", category: "Vägar", year: 2023, cost: 52000 },
+  { id: "h3", title: "Beskärning av träd", category: "Grönytor", year: 2022, cost: 38000 },
+];

@@ -28,6 +28,7 @@ const paths = {
   swap: "M4 8h13M13 4l4 4-4 4M20 16H7M11 12l-4 4 4 4",
   up: "M12 19V5M6 11l6-6 6 6",
   down: "M12 5v14M6 13l6 6 6-6",
+  wrench: "M14.5 5.5a4 4 0 0 0-5.3 5.3L3.5 16.5a1.4 1.4 0 0 0 2 2l5.7-5.7a4 4 0 0 0 5.3-5.3l-2.4 2.4-2-.5-.5-2 2.4-2.4z",
 };
 
 export type IconName = keyof typeof paths;

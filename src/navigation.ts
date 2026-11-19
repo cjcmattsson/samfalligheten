@@ -18,6 +18,7 @@ export const portalNav: { heading?: string; links: PortalLink[] }[] = [
       { to: "/portal/dokument", label: "Dokument", icon: "folder" },
       { to: "/portal/medlemmar", label: "Medlemsregister", icon: "users" },
       { to: "/portal/arshjul", label: "Årshjul", icon: "wheel" },
+      { to: "/portal/underhallsplan", label: "Underhållsplan", icon: "wrench" },
     ],
   },
   {

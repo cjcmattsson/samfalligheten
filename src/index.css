@@ -20,6 +20,8 @@
   --brand-ink: #ffffff;
   --brand-soft: #dfeaf0;
   --brand-text: #1a4259;
+  --chart-cost: #3a82b0;
+  --chart-fund: #c2602a;
 }
 
 :root[data-theme="dark"] {
@@ -40,6 +42,8 @@
   --brand-ink: #0e1a21;
   --brand-soft: #213846;
   --brand-text: #a9d2e6;
+  --chart-cost: #4a90c0;
+  --chart-fund: #d0763c;
 }
 
 :root[data-palette="skog"] {
@@ -86,6 +90,8 @@
   --color-brand-ink: var(--brand-ink);
   --color-brand-soft: var(--brand-soft);
   --color-brand-text: var(--brand-text);
+  --color-chart-cost: var(--chart-cost);
+  --color-chart-fund: var(--chart-fund);
   --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
 }
 

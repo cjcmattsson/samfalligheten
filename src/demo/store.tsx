@@ -12,6 +12,9 @@ import {
   initialAssociation,
   initialBoard,
   initialDocs,
+  initialFund,
+  initialMaintenance,
+  initialMaintenanceLog,
   initialFolders,
   initialMailings,
   initialMembers,
@@ -24,6 +27,9 @@ import {
   type BoardMember,
   type Doc,
   type Folder,
+  type MaintenanceFund,
+  type MaintenanceDone,
+  type MaintenanceItem,
   type Mailing,
   type Member,
   type NewsItem,
@@ -55,6 +61,12 @@ type Store = {
   steps: AssemblyStep[];
   setSteps: Setter<AssemblyStep[]>;
   board: BoardMember[];
+  maintenance: MaintenanceItem[];
+  setMaintenance: Setter<MaintenanceItem[]>;
+  fund: MaintenanceFund;
+  setFund: Setter<MaintenanceFund>;
+  maintenanceLog: MaintenanceDone[];
+  setMaintenanceLog: Setter<MaintenanceDone[]>;
   setBoard: Setter<BoardMember[]>;
   assemblyDate: string;
   setAssemblyDate: Setter<string>;
@@ -76,6 +88,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [tasks, setTasks] = useState(initialTasks);
   const [steps, setSteps] = useState(initialSteps);
   const [board, setBoard] = useState(initialBoard);
+  const [maintenance, setMaintenance] = useState(initialMaintenance);
+  const [fund, setFund] = useState(initialFund);
+  const [maintenanceLog, setMaintenanceLog] = useState(initialMaintenanceLog);
   const [assemblyDate, setAssemblyDate] = useState(initialAssemblyDate);
   const [palette, setPalette] = useState<Palette>("fjord");
   const [message, setMessage] = useState<string | null>(null);
@@ -113,6 +128,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         setSteps,
         board,
         setBoard,
+        maintenance,
+        setMaintenance,
+        fund,
+        setFund,
+        maintenanceLog,
+        setMaintenanceLog,
         assemblyDate,
         setAssemblyDate,
         palette,

@@ -14,7 +14,9 @@ import { NewsEditorPage } from "./pages/portal/NewsEditorPage";
 import { OverviewPage } from "./pages/portal/OverviewPage";
 import { PageEditorPage, PagesAdminPage } from "./pages/portal/PagesAdminPage";
 import { SettingsPage } from "./pages/portal/SettingsPage";
+import { MaintenancePage } from "./pages/portal/MaintenancePage";
 import { YearWheelPage } from "./pages/portal/YearWheelPage";
+import { MaintenancePublicPage } from "./pages/public/MaintenancePublicPage";
 import { ContactPage } from "./pages/public/ContactPage";
 import { DocumentsPage } from "./pages/public/DocumentsPage";
 import { HomePage } from "./pages/public/HomePage";
@@ -32,6 +34,7 @@ export function App() {
         <Route path="dokument" element={<DocumentsPage />} />
         <Route path="kontakt" element={<ContactPage />} />
         <Route path="integritetspolicy" element={<PrivacyPage />} />
+        <Route path="underhallsplan" element={<MaintenancePublicPage />} />
         <Route path=":slug" element={<InfoPage />} />
       </Route>
 
@@ -49,6 +52,7 @@ export function App() {
             <Route path="dokument" element={<DocumentsAdminPage />} />
             <Route path="medlemmar" element={<MembersPage />} />
             <Route path="arshjul" element={<YearWheelPage />} />
+            <Route path="underhallsplan" element={<MaintenancePage />} />
             <Route path="installningar" element={<SettingsPage />} />
             <Route element={<RequireAdmin />}>
               <Route path="exportera" element={<ExportPage />} />

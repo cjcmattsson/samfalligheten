@@ -55,6 +55,9 @@ Inspiration: gemensamheten.se (publik hemsida + styrelseportal), men smalare och
 - `pages/{slug}` – titel, innehåll, ordning, synlig i meny.
 - `yearTasks/{id}` – titel, månad, beskrivning, status, kategori (t.ex. `stamma`).
 - `settings/association` – föreningsnamn, kontaktuppgifter, färgtema.
+- `maintenanceItems/{id}` – åtgärd, kategori, mängd, senast utförd (år), intervall, kostnad i dagens priser, ev. flyttat år, skick, anteckning. **Inga personuppgifter.**
+- `maintenanceLog/{id}` – utförd åtgärd, år, verklig kostnad.
+- `settings/maintenanceFund` – fondens saldo, årlig avsättning, om kommande arbeten visas publikt (utan belopp).
 
 ## Säkerhet & GDPR – krav
 

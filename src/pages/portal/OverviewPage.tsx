@@ -4,11 +4,13 @@ import { Icon, type IconName } from "../../components/icons";
 import { Badge, Card, LinkButton, PageHeader } from "../../components/ui";
 import { useStore } from "../../demo/store";
 import { MONTHS, addDays, formatDate, formatShortDate, formatSize } from "../../lib/format";
+import { dueYear } from "../../lib/maintenance";
 
 type Todo = { icon: IconName; title: string; detail: string; to: string; tone: string };
 
 export function OverviewPage() {
-  const { members, news, tasks, setTasks, steps, assemblyDate, docs } = useStore();
+  const { members, news, tasks, setTasks, steps, assemblyDate, docs, maintenance } = useStore();
+  const overdue = maintenance.filter((item) => dueYear(item) < new Date().getFullYear()).length;
   const member = useMember();
 
   const month = new Date().getMonth() + 1;
@@ -28,6 +30,15 @@ export function OverviewPage() {
       detail: "De får inga utskick förrän adressen är rättad.",
       to: "/portal/medlemmar?visa=studsar",
       tone: "bg-danger-soft text-danger",
+    });
+  }
+  if (overdue > 0) {
+    todos.push({
+      icon: "wrench",
+      title: `${overdue} ${overdue === 1 ? "underhållsåtgärd är försenad" : "underhållsåtgärder är försenade"}`,
+      detail: "De borde ha gjorts tidigare år enligt underhållsplanen.",
+      to: "/portal/underhallsplan",
+      tone: "bg-warn-soft text-warn",
     });
   }
   if (nextStep) {

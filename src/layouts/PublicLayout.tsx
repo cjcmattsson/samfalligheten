@@ -12,7 +12,7 @@ function navLinkClass({ isActive }: { isActive: boolean }) {
 }
 
 export function PublicLayout() {
-  const { association, pages } = useStore();
+  const { association, pages, fund } = useStore();
   const { pathname } = useLocation();
   const [openedAt, setOpenedAt] = useState<string | null>(null);
   const menuOpen = openedAt === pathname;
@@ -21,6 +21,7 @@ export function PublicLayout() {
     ...pages.filter((page) => page.visible).map((page) => ({ to: `/${page.slug}`, label: page.title })),
     { to: "/nyheter", label: "Nyheter" },
     { to: "/dokument", label: "Dokument" },
+    ...(fund.showPublic ? [{ to: "/underhallsplan", label: "Underhåll" }] : []),
     { to: "/kontakt", label: "Kontakt" },
   ];
 
