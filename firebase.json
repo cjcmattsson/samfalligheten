@@ -3,9 +3,16 @@
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
   },
-  "storage": {
-    "rules": "storage.rules"
-  },
+  "storage": [
+    {
+      "target": "main",
+      "rules": "storage.rules"
+    },
+    {
+      "target": "unused",
+      "rules": "storage-unused.rules"
+    }
+  ],
   "hosting": {
     "public": "dist",
     "ignore": [

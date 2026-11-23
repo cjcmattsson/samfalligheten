@@ -17,12 +17,16 @@ const app = initializeApp(
         projectId: "demo-samfalligheten",
         storageBucket: "demo-samfalligheten.appspot.com",
       }
-    : {
-        apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-        authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-        projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-        storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-        appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    : // Production. This config is public by design: it only names the project.
+      // Access is controlled by the security rules, not by keeping these secret.
+      {
+        apiKey: "AIzaSyD5z2pP7Ed3ISnprDM9YWWxukqUK2YUfO4",
+        authDomain: "samfalligheten-710db.firebaseapp.com",
+        projectId: "samfalligheten-710db",
+        // The Stockholm bucket (europe-north2), not the project's default one in Finland.
+        storageBucket: "samfalligheten-710db-se",
+        appId: "1:814367245320:web:c315f95718d786d20afdbd",
+        messagingSenderId: "814367245320",
       },
 );
 

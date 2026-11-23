@@ -2,5 +2,28 @@
   "projects": {
     "default": "demo-samfalligheten",
     "production": "samfalligheten-710db"
-  }
+  },
+  "targets": {
+    "samfalligheten-710db": {
+      "storage": {
+        "main": [
+          "samfalligheten-710db-se"
+        ],
+        "unused": [
+          "samfalligheten-710db.firebasestorage.app"
+        ]
+      }
+    },
+    "demo-samfalligheten": {
+      "storage": {
+        "main": [
+          "demo-samfalligheten.appspot.com"
+        ],
+        "unused": [
+          "demo-samfalligheten-unused"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

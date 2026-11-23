@@ -65,12 +65,19 @@ of these checks.
 
 ## Production configuration
 
-Production builds read `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`,
-`VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_STORAGE_BUCKET` and `VITE_FIREBASE_APP_ID`
-from `.env.production`, which is not committed.
+The production web config is in `src/lib/firebase.ts`. It is public by design (it only names
+the project); access is controlled by the security rules.
 
-Production regions (fixed, cannot be changed): Firestore and Functions in `europe-north2` (Stockholm), the default Storage bucket in `europe-north1` (Finland). Both are in the EU. Cross-region traffic between them is negligible at this scale.
-The Firestore region cannot be changed later.
+Production regions (fixed, cannot be changed):
+
+- Firestore and Functions: `europe-north2` (Stockholm).
+- Files: the bucket `samfalligheten-710db-se` in `europe-north2` (Stockholm). It was created in
+  Google Cloud and imported into Firebase, because the Firebase console does not offer Stockholm.
+- The project's default bucket `samfalligheten-710db.firebasestorage.app` is in `europe-north1`
+  (Finland). It is not used, and `storage-unused.rules` keeps it locked.
+
+`firebase.json` deploys storage rules per target. The targets map to buckets in `.firebaserc`
+(`main` and `unused`, for both the production and the emulator project).
 
 ## Shareable demo
 

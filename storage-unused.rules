@@ -1,0 +1,11 @@
+rules_version = '2';
+
+// The project's default bucket lives in europe-north1 (Finland). All files are
+// kept in the Stockholm bucket instead, so this one stays empty and locked.
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
