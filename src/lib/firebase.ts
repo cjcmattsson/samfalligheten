@@ -29,7 +29,7 @@ const app = initializeApp(
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
-export const functions = getFunctions(app, "europe-north1");
+export const functions = getFunctions(app, "europe-north2");
 
 if (useEmulators) {
   connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });

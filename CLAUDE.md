@@ -16,7 +16,7 @@ Inspiration: gemensamheten.se (publik hemsida + styrelseportal), men smalare och
 - **Frontend:** Vite + React + TypeScript, React Router, Tailwind CSS. Ren SPA (ingen SSR).
 - **Firebase Hosting** – serverar både publik sida och portal.
 - **Firebase Auth** – endast för styrelsen. Inloggning via e-postlänk (passwordless) och valfritt Google. Ingen öppen registrering: bara e-postadresser som finns i allowlist (`boardMembers`) får logga in.
-- **Cloud Firestore** – all strukturerad data. **EU-region** (t.ex. `europe-north1`), samma region för Storage och Functions. Regionen kan inte ändras i efterhand.
+- **Cloud Firestore** – all strukturerad data. **EU-region `europe-north2` (Stockholm)**, samma region för Storage och Functions. Regionen kan inte ändras i efterhand.
 - **Cloud Storage for Firebase** – dokumentarkiv (PDF:er) och nyhetsbilder.
 - **Cloud Functions (2nd gen, TypeScript)** – mejlutskick och admin-operationer (sätta roller via custom claims, radera medlem).
 - **Mejl:** Nodemailer via föreningens Google Workspace-konto (t.ex. `info@<föreningens-domän>`). Inloggningsuppgifter lagras som Functions-secret, aldrig i koden.

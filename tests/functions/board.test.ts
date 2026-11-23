@@ -29,7 +29,7 @@ async function client(email?: string) {
   connectAuthEmulator(auth, authHost, { disableWarnings: true });
   const db = getFirestore(app);
   connectFirestoreEmulator(db, "127.0.0.1", 8080);
-  const functions = getFunctions(app, "europe-north1");
+  const functions = getFunctions(app, "europe-north2");
   connectFunctionsEmulator(functions, "127.0.0.1", 5001);
   if (email) await signInWithEmailAndPassword(auth, email, password);
   return {

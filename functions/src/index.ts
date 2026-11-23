@@ -5,7 +5,7 @@ import { setGlobalOptions } from "firebase-functions/v2";
 import { HttpsError, onCall, type CallableRequest } from "firebase-functions/v2/https";
 
 initializeApp();
-setGlobalOptions({ region: "europe-north1", maxInstances: 5 });
+setGlobalOptions({ region: "europe-north2", maxInstances: 5 });
 
 const boardMembers = () => getFirestore().collection("boardMembers");
 
