@@ -69,7 +69,7 @@ Production builds read `VITE_FIREBASE_API_KEY`, `VITE_FIREBASE_AUTH_DOMAIN`,
 `VITE_FIREBASE_PROJECT_ID`, `VITE_FIREBASE_STORAGE_BUCKET` and `VITE_FIREBASE_APP_ID`
 from `.env.production`, which is not committed.
 
-Create Firestore, Storage and Functions in the same EU region, `europe-north2` (Stockholm), where the production database already lives.
+Production regions (fixed, cannot be changed): Firestore and Functions in `europe-north2` (Stockholm), the default Storage bucket in `europe-north1` (Finland). Both are in the EU. Cross-region traffic between them is negligible at this scale.
 The Firestore region cannot be changed later.
 
 ## Shareable demo
